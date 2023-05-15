@@ -1,0 +1,39 @@
+//By listing the first six prime numbers: 2, 3, 5, 7, 11, and 13, we can see that the 6th prime is 13. What is the 47th prime number?
+using System;
+
+class Program
+{
+    static void Main()
+    {
+        int count = 0;  // Number of prime numbers found
+        int number = 2; // Starting number to check
+
+        while (count < 47)
+        {
+            if (IsPrime(number))
+            {
+                count++;
+                if (count == 47)
+                {
+                    Console.WriteLine("The 47th prime number is: " + number);
+                    break;
+                }
+            }
+            number++;
+        }
+    }
+
+    static bool IsPrime(int number)
+    {
+        if (number < 2)
+            return false;
+
+        for (int i = 2; i <= Math.Sqrt(number); i++)
+        {
+            if (number % i == 0)
+                return false;
+        }
+
+        return true;
+    }
+}
