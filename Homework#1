@@ -1,0 +1,21 @@
+//Write a program that reads a number from the keyboard. Check whether that number is divisible by 7 or 11 or not
+
+using System;
+
+class Program
+{
+    static void Main()
+    {
+        Console.Write("Enter a number: ");
+        int number = int.Parse(Console.ReadLine());
+
+        if (number % 7 == 0 || number % 11 == 0)
+        {
+            Console.WriteLine("The number is divisible by 7 or 11.");
+        }
+        else
+        {
+            Console.WriteLine("The number is not divisible by 7 or 11.");
+        }
+    }
+}
