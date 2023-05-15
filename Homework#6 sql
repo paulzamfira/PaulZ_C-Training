@@ -1,0 +1,99 @@
+//still workin progress
+-- Create the tables
+CREATE TABLE Users (
+    UserID INT PRIMARY KEY,
+    UserName VARCHAR(50)
+);
+
+CREATE TABLE Products (
+    ProductID INT PRIMARY KEY,
+    ProductName VARCHAR(50),
+    Price DECIMAL(10, 2)
+);
+
+CREATE TABLE Orders (
+    OrderID INT PRIMARY KEY,
+    UserID INT,
+    OrderDate DATE,
+    FOREIGN KEY (UserID) REFERENCES Users(UserID)
+);
+
+CREATE TABLE OrderItems (
+    OrderID INT,
+    ProductID INT,
+    Quantity INT,
+    PRIMARY KEY (OrderID, ProductID),
+    FOREIGN KEY (OrderID) REFERENCES Orders(OrderID),
+    FOREIGN KEY (ProductID) REFERENCES Products(ProductID)
+);
+
+-- Insert data into tables
+INSERT INTO Users (UserID, UserName) VALUES (1, 'John');
+INSERT INTO Users (UserID, UserName) VALUES (2, 'Jane');
+
+INSERT INTO Products (ProductID, ProductName, Price) VALUES (1, 'Product A', 10.99);
+INSERT INTO Products (ProductID, ProductName, Price) VALUES (2, 'Product B', 15.99);
+
+INSERT INTO Orders (OrderID, UserID, OrderDate) VALUES (1, 1, '2023-05-01');
+INSERT INTO Orders (OrderID, UserID, OrderDate) VALUES (2, 2, '2023-05-05');
+
+INSERT INTO OrderItems (OrderID, ProductID, Quantity) VALUES (1, 1, 2);
+INSERT INTO OrderItems (OrderID, ProductID, Quantity) VALUES (1, 2, 3);
+INSERT INTO OrderItems (OrderID, ProductID, Quantity) VALUES (2, 1, 1);
+
+-- Retrieve data based on conditions
+SELECT * FROM Users WHERE UserID = 1;
+
+SELECT * FROM Products WHERE Price > 10;
+
+-- Retrieve data ordered by a field in descending order
+SELECT * FROM Orders ORDER BY OrderDate DESC;
+
+-- Concatenate the data between tables
+SELECT Users.UserName, Products.ProductName
+FROM Users
+JOIN Orders ON Users.UserID = Orders.UserID
+JOIN OrderItems ON Orders.OrderID = OrderItems.OrderID
+JOIN Products ON OrderItems.ProductID = Products.ProductID;
+
+-- Update data
+UPDATE Users SET UserName = 'Johnny' WHERE UserID = 1;
+
+-- Delete data
+DELETE FROM Orders WHERE OrderID = 2;
+
+-- Create a simple procedure
+DELIMITER //
+
+CREATE PROCEDURE GetOrderTotal(IN orderId INT, OUT total DECIMAL(10, 2))
+BEGIN
+    SELECT SUM(Price * Quantity) INTO total
+    FROM OrderItems
+    JOIN Products ON OrderItems.ProductID = Products.ProductID
+    WHERE OrderItems.OrderID = orderId;
+END //
+
+DELIMITER ;
+
+-- Call the procedure and retrieve the result
+SET @totalAmount := 0;
+CALL GetOrderTotal(1, @totalAmount);
+SELECT @totalAmount;
+
+-- Create a function that returns a value
+DELIMITER //
+
+CREATE FUNCTION CalculateTax(price DECIMAL(10, 2)) RETURNS DECIMAL(10, 2)
+BEGIN
+    DECLARE taxRate DECIMAL(4, 2);
+    SET taxRate = 0.1;
+    RETURN price * taxRate;
+END //
+
+DELIMITER ;
+
+-- Call the function and retrieve the result
+SELECT CalculateTax(100);
+```
+
+This program creates tables for users, products, orders, and order items. It inserts sample data into the tables and demonstrates various SQL operations such as querying, ordering, updating, deleting, creating procedures, and creating functions. Feel free
