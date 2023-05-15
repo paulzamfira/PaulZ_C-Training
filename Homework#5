@@ -1,0 +1,167 @@
+//Create a system for managing a zoo. You will have the next entities:
+//different animals, each one with a name, what they eat and a field that shows if they were fed
+//workers that feed the animals
+//1 worker that sells tickets for the zoo
+//Assign a worker to list of animals that it need to take care for
+//Feed the animals.
+//Keep track of the number of tickets sold
+
+using System;
+using System.Collections.Generic;
+
+class Program
+{
+    static List<Animal> animals = new List<Animal>();
+    static List<Worker> workers = new List<Worker>();
+    static Worker ticketSeller;
+    static int ticketsSold = 0;
+
+    static void Main(string[] args)
+    {
+        int menuItem = -1;
+
+        while (menuItem != 0)
+        {
+            PrintMenu();
+            Console.WriteLine("Please enter a value:");
+            int.TryParse(Console.ReadLine(), out menuItem);
+            switch (menuItem)
+            {
+                case 1:
+                    AddNewAnimal();
+                    break;
+                case 2:
+                    AssignWorkerToAnimal();
+                    break;
+                case 3:
+                    FeedAnimals();
+                    break;
+                case 4:
+                    SellTicket();
+                    break;
+                case 5:
+                    DisplayTicketsSold(); // New menu option
+                    break;
+                case 0:
+                    break;
+                default:
+                    Console.WriteLine("Invalid input");
+                    break;
+            }
+        }
+    }
+
+    static void PrintMenu()
+    {
+        Console.WriteLine("1 - Add a new animal");
+        Console.WriteLine("2 - Assign a worker to an animal");
+        Console.WriteLine("3 - Feed the animals");
+        Console.WriteLine("4 - Sell a ticket");
+        Console.WriteLine("5 - Show tickets sold"); // New menu option
+        Console.WriteLine("0 - Exit");
+    }
+
+    static void AddNewAnimal()
+    {
+        Console.WriteLine("Enter animal name:");
+        string name = Console.ReadLine();
+
+        Console.WriteLine("Enter what the animal eats:");
+        string food = Console.ReadLine();
+
+        animals.Add(new Animal(name, food));
+        Console.WriteLine("Animal added successfully.");
+    }
+
+    static void AssignWorkerToAnimal()
+    {
+        Console.WriteLine("Enter worker name:");
+        string name = Console.ReadLine();
+
+        Console.WriteLine("Enter animal name to assign the worker to:");
+        string animalName = Console.ReadLine();
+
+        Worker worker = workers.Find(w => w.Name == name);
+        Animal animal = animals.Find(a => a.Name == animalName);
+
+        if (worker == null)
+        {
+            worker = new Worker(name);
+            workers.Add(worker);
+        }
+
+        if (animal != null)
+        {
+            worker.AnimalsToCareFor.Add(animal);
+            Console.WriteLine("Worker assigned to the animal successfully.");
+        }
+        else
+        {
+            Console.WriteLine("Animal not found.");
+        }
+    }
+    
+    static void DisplayTicketsSold()
+    {
+        Console.WriteLine("Tickets sold: " + ticketsSold);
+    }
+
+    static void FeedAnimals()
+    {
+        Console.WriteLine("Enter worker name who will feed the animals:");
+        string name = Console.ReadLine();
+
+        Worker worker = workers.Find(w => w.Name == name);
+
+        if (worker != null)
+        {
+            foreach (Animal animal in worker.AnimalsToCareFor)
+            {
+                animal.Fed = true;
+                Console.WriteLine($"Worker '{worker.Name}' fed the animal '{animal.Name}' with '{animal.Food}'.");
+            }
+        }
+        else
+        {
+            Console.WriteLine("Worker not found.");
+        }
+    }
+
+    static void SellTicket()
+    {
+        if (ticketSeller == null)
+        {
+            ticketSeller = new Worker("Ticket Seller");
+            workers.Add(ticketSeller);
+        }
+
+        ticketsSold++;
+        Console.WriteLine("Ticket sold successfully.");
+    }
+}
+
+class Animal
+{
+    public string Name { get; set; }
+    public string Food { get; set; }
+    public bool Fed { get; set; }
+
+    public Animal(string name, string food)
+    {
+        Name = name;
+        Food = food;
+        Fed = false;
+    }
+}
+
+class Worker
+{
+    public string Name { get; set; }
+    public List<Animal> AnimalsToCareFor { get; set; }
+
+    public Worker(string name)
+    {
+        Name = name;
+        AnimalsToCareFor = new List<Animal>();
+    }
+}
