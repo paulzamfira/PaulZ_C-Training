@@ -1,4 +1,5 @@
 //still workin progress
+
 -- Create the tables
 CREATE TABLE Users (
     UserID INT PRIMARY KEY,
@@ -57,7 +58,7 @@ JOIN OrderItems ON Orders.OrderID = OrderItems.OrderID
 JOIN Products ON OrderItems.ProductID = Products.ProductID;
 
 -- Update data
-UPDATE Users SET UserName = 'Johnny' WHERE UserID = 1;
+UPDATE Users SET UserName = 'Paul' WHERE UserID = 1;
 
 -- Delete data
 DELETE FROM Orders WHERE OrderID = 2;
@@ -83,17 +84,4 @@ SELECT @totalAmount;
 -- Create a function that returns a value
 DELIMITER //
 
-CREATE FUNCTION CalculateTax(price DECIMAL(10, 2)) RETURNS DECIMAL(10, 2)
-BEGIN
-    DECLARE taxRate DECIMAL(4, 2);
-    SET taxRate = 0.1;
-    RETURN price * taxRate;
-END //
 
-DELIMITER ;
-
--- Call the function and retrieve the result
-SELECT CalculateTax(100);
-```
-
-This program creates tables for users, products, orders, and order items. It inserts sample data into the tables and demonstrates various SQL operations such as querying, ordering, updating, deleting, creating procedures, and creating functions. Feel free
